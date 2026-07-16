@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "write_and_read.hpp"
+#include <rfl_test/yaml.hpp>
 
 namespace test_combined_processors {
 

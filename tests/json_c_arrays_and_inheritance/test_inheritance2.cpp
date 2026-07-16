@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
 #include <cassert>
-#include <rfl.hpp>
+#include <rfl_test/c_arrays_and_inheritance.hpp>
 
-#include "rfl/num_fields.hpp"
+
 
 namespace test_inheritance2 {
 

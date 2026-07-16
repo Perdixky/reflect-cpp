@@ -1,9 +1,13 @@
 #include <memory>
-#include <rfl.hpp>
 #include <string>
 #include <vector>
 
 #include "write_and_read.hpp"
+#include <utility>
+
+#include <rfl_test/yaml.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_unique_ptr {
 

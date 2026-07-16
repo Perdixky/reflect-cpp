@@ -1,8 +1,9 @@
 #include <chrono>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_duration {
 

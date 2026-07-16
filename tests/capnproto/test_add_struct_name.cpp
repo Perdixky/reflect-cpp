@@ -2,6 +2,7 @@
 #include <vector>
 
 #include "write_and_read.hpp"
+#include <rfl_test/capnproto.hpp>
 
 namespace test_add_struct_name {
 

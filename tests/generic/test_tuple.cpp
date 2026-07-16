@@ -3,8 +3,9 @@
 #include <compare>
 #include <limits>
 #include <string>
+#include <rfl_test/rfl.hpp>
 
-#include <rfl.hpp>
+
 
 namespace test_tuple_spaceship {
 

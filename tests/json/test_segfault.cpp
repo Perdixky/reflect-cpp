@@ -1,8 +1,9 @@
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 // This example had led to a segfault on GCC 12.
 // To make sure this won't happen again, we include

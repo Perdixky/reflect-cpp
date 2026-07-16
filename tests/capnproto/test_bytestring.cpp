@@ -1,6 +1,10 @@
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <cstddef>
+
+#include <rfl_test/capnproto.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_bytestring {
 

@@ -1,13 +1,16 @@
 #include <array>
 #include <memory>
-#include <rfl/boost_serialization.hpp>
 #include <string>
 
 // Make sure things still compile when
 // rfl.hpp is included after rfl/cbor.hpp.
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/boost_serialization.hpp>
+
 
 namespace test_array {
 

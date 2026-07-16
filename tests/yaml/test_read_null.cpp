@@ -3,9 +3,12 @@
 #include <cmath>
 #include <cstdint>
 #include <optional>
-#include <rfl/yaml.hpp>
 #include <string>
 #include <string_view>
+#include <type_traits>
+
+#include <rfl_test/yaml.hpp>
+
 
 namespace test_read_null {
 

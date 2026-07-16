@@ -2,10 +2,10 @@
 
 #include <string>
 #include <utility>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/avro.hpp>
 
-#include <rfl.hpp>
-#include <rfl/avro.hpp>
-#include <rfl/avro/SchemaImpl.hpp>
+
 
 // avro::SchemaImpl move-assignment — double-decrement / use-after-free
 // File: src/rfl/avro/SchemaImpl.cpp:34-42

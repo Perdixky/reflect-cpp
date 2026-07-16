@@ -1,8 +1,9 @@
 #include <cassert>
-#include <rfl.hpp>
 #include <vector>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_literal {
 

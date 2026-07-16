@@ -1,7 +1,9 @@
 #include <cassert>
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <rfl_test/avro.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_flag_enum {
 

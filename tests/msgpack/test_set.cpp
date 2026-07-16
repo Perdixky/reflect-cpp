@@ -1,7 +1,13 @@
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <memory>
+#include <set>
+#include <utility>
+
+#include <rfl_test/msgpack.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_set {
 

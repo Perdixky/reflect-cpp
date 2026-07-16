@@ -1,10 +1,14 @@
 #include <atomic>
 #include <memory>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <cstdint>
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_atomic {
 

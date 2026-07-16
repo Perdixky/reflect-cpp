@@ -1,11 +1,12 @@
-#include <rfl/json.hpp>
 #include <string>
 
 // Make sure things still compile when
 // rfl.hpp is included after rfl/json.hpp.
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_all_of {
 

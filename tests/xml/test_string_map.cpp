@@ -1,9 +1,11 @@
 #include <map>
 #include <memory>
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/xml.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_string_map {
 TEST(xml, test_string_map) {

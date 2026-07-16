@@ -1,9 +1,12 @@
 #include <cassert>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
 
 #include <gtest/gtest.h>
+#include <type_traits>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_tagged_union5 {
 

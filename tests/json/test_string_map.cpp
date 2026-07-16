@@ -1,10 +1,11 @@
 #include <map>
 #include <memory>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_string_map {
 TEST(json, test_string_map) {

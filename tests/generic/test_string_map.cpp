@@ -1,9 +1,10 @@
 #include <map>
 #include <memory>
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_string_map {
 TEST(generic, test_string_map) { 

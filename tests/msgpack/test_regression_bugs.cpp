@@ -6,9 +6,10 @@
 #include <limits>
 #include <string>
 #include <vector>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/msgpack.hpp>
 
-#include <rfl.hpp>
-#include <rfl/msgpack.hpp>
+
 
 // msgpack::read — ignores return value of msgpack_unpack
 // File: include/rfl/msgpack/read.hpp:35-36

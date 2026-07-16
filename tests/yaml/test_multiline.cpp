@@ -1,7 +1,9 @@
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/yaml.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 struct MultilineTestStruct {
   std::string normal_string;

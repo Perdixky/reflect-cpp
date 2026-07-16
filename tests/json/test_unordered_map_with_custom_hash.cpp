@@ -1,9 +1,14 @@
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
 #include <unordered_map>
 
 #include "write_and_read.hpp"
+#include <cstddef>
+#include <memory>
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_unordered_map_with_custom_hash {
 

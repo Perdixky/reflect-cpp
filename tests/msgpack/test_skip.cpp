@@ -1,6 +1,7 @@
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/msgpack.hpp>
 
 namespace test_skip {
 

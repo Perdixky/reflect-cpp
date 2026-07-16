@@ -1,8 +1,13 @@
 #include <map>
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <memory>
+#include <utility>
+
+#include <rfl_test/toml.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_map_with_key_validation {
 

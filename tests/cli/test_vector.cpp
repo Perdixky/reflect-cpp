@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
-#include <rfl.hpp>
-#include <rfl/cli.hpp>
 #include <string>
 #include <vector>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/cli.hpp>
+
 
 namespace test_vector {
 

@@ -1,8 +1,11 @@
 #include <cassert>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 
 #include <gtest/gtest.h>
+#include <string>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_enum_error_messages {
 

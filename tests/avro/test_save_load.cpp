@@ -1,10 +1,11 @@
 #include <cassert>
-#include <rfl.hpp>
-#include <rfl/avro.hpp>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/avro.hpp>
+
 
 namespace test_save_load {
 

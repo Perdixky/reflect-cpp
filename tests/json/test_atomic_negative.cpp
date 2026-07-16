@@ -2,8 +2,9 @@
 
 #include <atomic>
 #include <cstdint>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_atomic_negative {
 

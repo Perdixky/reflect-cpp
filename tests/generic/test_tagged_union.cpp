@@ -1,8 +1,11 @@
 #include <cassert>
 #include <concepts>
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <string>
+
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_tagged_union {
 

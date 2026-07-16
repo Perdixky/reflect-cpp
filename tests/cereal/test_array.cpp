@@ -1,11 +1,14 @@
 #include <array>
 #include <memory>
-#include <rfl/cereal.hpp>
 #include <string>
 
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/cereal.hpp>
+
 
 namespace test_array {
 

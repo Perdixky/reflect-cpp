@@ -1,6 +1,11 @@
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <memory>
+#include <variant>
+
+#include <rfl_test/yaml.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_variant {
 

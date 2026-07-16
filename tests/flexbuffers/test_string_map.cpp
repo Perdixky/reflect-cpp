@@ -1,9 +1,11 @@
 #include <map>
 #include <memory>
-#include <rfl.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/flexbuf.hpp>
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_string_map {
 TEST(flexbuf, test_string_map) { 

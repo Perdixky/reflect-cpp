@@ -1,11 +1,12 @@
 #include <gtest/gtest.h>
 
-#include <rfl.hpp>
-#include <rfl/capnproto.hpp>
 #include <string>
 #include <vector>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/capnproto.hpp>
+
 
 namespace test_tutorial_example {
 

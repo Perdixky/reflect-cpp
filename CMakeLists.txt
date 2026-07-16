@@ -556,6 +556,12 @@ target_precompile_headers(reflectcpp PRIVATE [["rfl.hpp"]] <iostream> <string> <
 if (REFLECTCPP_BUILD_TESTS)
     add_library(reflectcpp_tests_crt INTERFACE)
     target_link_libraries(reflectcpp_tests_crt INTERFACE reflectcpp GTest::gtest_main)
+    target_compile_definitions(reflectcpp_tests_crt INTERFACE
+        REFLECTCPP_MODULES=$<BOOL:${REFLECTCPP_MODULES_ENABLED}>
+    )
+    target_include_directories(reflectcpp_tests_crt INTERFACE
+        ${CMAKE_CURRENT_SOURCE_DIR}/tests/include
+    )
 
     enable_testing()
     find_package(GTest CONFIG REQUIRED)

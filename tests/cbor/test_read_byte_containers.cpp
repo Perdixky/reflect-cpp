@@ -3,12 +3,15 @@
 #include <algorithm>
 #include <array>
 #include <cstddef>
-#include <rfl/cbor.hpp>
+#include <cstdint>
 #include <span>
+#include <vector>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/cbor.hpp>
 
 // Make sure things still compile when
 // rfl.hpp is included after rfl/cbor.hpp.
-#include <rfl.hpp>
 
 namespace test_read_byte_containers {
 

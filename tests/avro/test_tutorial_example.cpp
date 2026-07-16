@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 
-#include <rfl.hpp>
-#include <rfl/avro.hpp>
 #include <string>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/avro.hpp>
+
 
 /// The basic example from the Avro C tutorial.
 namespace test_tutorial_example {

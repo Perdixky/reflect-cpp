@@ -1,7 +1,8 @@
 #include <optional>
-#include <rfl.hpp>
-#include <rfl/json.hpp>
 #include <string>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/json.hpp>
+
 
 namespace test_json_schema5 {
 

@@ -1,10 +1,11 @@
 #include <cassert>
-#include <rfl.hpp>
-#include <rfl/msgpack.hpp>
 #include <string>
 #include <vector>
 
 #include <gtest/gtest.h>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/msgpack.hpp>
+
 
 namespace test_save_load {
 

@@ -1,8 +1,11 @@
 #include <gtest/gtest.h>
 
-#include <rfl.hpp>
 
 #include "test_helpers.hpp"
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+
 
 namespace test_skip_cross_move {
 

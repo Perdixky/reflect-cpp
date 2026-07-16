@@ -1,8 +1,9 @@
-#include <rfl.hpp>
-#include <rfl/cereal.hpp>
 #include <string>
 
 #include "write_and_read.hpp"
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/cereal.hpp>
+
 
 namespace test_generic {
 

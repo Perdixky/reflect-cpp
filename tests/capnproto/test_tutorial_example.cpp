@@ -1,9 +1,10 @@
 #include <gtest/gtest.h>
 
-#include <rfl.hpp>
-#include <rfl/capnproto.hpp>
 #include <string>
 #include <vector>
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/capnproto.hpp>
+
 
 // #include "write_and_read.hpp"
 

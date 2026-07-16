@@ -1,13 +1,16 @@
 #include <array>
 #include <memory>
-#include <rfl/ubjson.hpp>
 #include <string>
 
 // Make sure things still compile when
 // rfl.hpp is included after rfl/ubjson.hpp.
-#include <rfl.hpp>
 
 #include "write_and_read.hpp"
+#include <utility>
+
+#include <rfl_test/rfl.hpp>
+#include <rfl_test/ubjson.hpp>
+
 
 namespace test_array {
 

@@ -2,8 +2,11 @@
 #define WRITE_AND_READ_
 
 #include <gtest/gtest.h>
+#include <type_traits>
 
-#include <rfl/capnproto.hpp>
+#include <rfl_test/capnproto.hpp>
+
+
 
 template <class... Ps>
 void write_and_read(const auto& _struct) {
