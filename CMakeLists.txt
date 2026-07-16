@@ -1,10 +1,13 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.28)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 option(REFLECTCPP_BUILD_SHARED "Build shared library" ${BUILD_SHARED_LIBS})
 option(REFLECTCPP_STRICT_WARNINGS "Enable strict compiler warnings" OFF)
 option(REFLECTCPP_INSTALL "Install reflect cpp" OFF)
+set(REFLECTCPP_MODULES "AUTO" CACHE STRING
+    "Build C++20 modules (AUTO, ON, or OFF)")
+set_property(CACHE REFLECTCPP_MODULES PROPERTY STRINGS AUTO ON OFF)
 
 option(REFLECTCPP_ALL_FORMATS "Enable all supported formats" OFF)
 option(REFLECTCPP_JSON "Enable JSON support" ON) # enabled by default
@@ -186,6 +189,40 @@ project(reflectcpp VERSION 0.25.0 LANGUAGES CXX)
 
 find_package(ament_cmake QUIET)
 
+string(TOUPPER "${REFLECTCPP_MODULES}" _REFLECTCPP_MODULES_MODE)
+set(_REFLECTCPP_MODULE_MODES AUTO ON OFF)
+if (NOT _REFLECTCPP_MODULES_MODE IN_LIST _REFLECTCPP_MODULE_MODES)
+    message(FATAL_ERROR
+        "REFLECTCPP_MODULES must be AUTO, ON, or OFF, not '${REFLECTCPP_MODULES}'.")
+endif ()
+
+set(_REFLECTCPP_MODULES_SUPPORTED OFF)
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" AND
+    CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 20)
+    set(_REFLECTCPP_MODULES_SUPPORTED ON)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" AND
+        CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL 14)
+    set(_REFLECTCPP_MODULES_SUPPORTED ON)
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND MSVC_VERSION GREATER_EQUAL 1934)
+    set(_REFLECTCPP_MODULES_SUPPORTED ON)
+endif ()
+
+if (_REFLECTCPP_MODULES_MODE STREQUAL "AUTO")
+    set(REFLECTCPP_MODULES_ENABLED ${_REFLECTCPP_MODULES_SUPPORTED})
+elseif (_REFLECTCPP_MODULES_MODE STREQUAL "ON")
+    if (NOT _REFLECTCPP_MODULES_SUPPORTED)
+        message(FATAL_ERROR
+            "REFLECTCPP_MODULES=ON requires Clang 20+, GCC 14+, or MSVC "
+            "19.34+ (toolset 14.34+); detected ${CMAKE_CXX_COMPILER_ID} "
+            "${CMAKE_CXX_COMPILER_VERSION}.")
+    endif ()
+    set(REFLECTCPP_MODULES_ENABLED ON)
+else ()
+    set(REFLECTCPP_MODULES_ENABLED OFF)
+endif ()
+
+message(STATUS "reflect-cpp C++ modules: ${REFLECTCPP_MODULES_ENABLED}")
+
 if (PROJECT_IS_TOP_LEVEL)
     set(REFLECTCPP_INSTALL ON)
 endif()
@@ -248,6 +285,17 @@ set(REFLECT_CPP_SOURCES
     src/reflectcpp.cpp
 )
 
+set(REFLECT_CPP_MODULES
+    modules/rfl.cppm
+)
+
+if (REFLECTCPP_JSON OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES
+        modules/rfl.json.cppm
+        modules/rfl.c_arrays_and_inheritance.cppm
+    )
+endif ()
+
 target_include_directories(
     reflectcpp PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
@@ -286,6 +334,7 @@ if (_REFLECTCPP_NEEDS_JSON_IMPL)
 endif ()
 
 if (REFLECTCPP_AVRO OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.avro.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_avro.cpp
     )
@@ -319,6 +368,7 @@ if (REFLECTCPP_AVRO OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_BSON OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.bson.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_bson.cpp
     )
@@ -329,6 +379,7 @@ if (REFLECTCPP_BSON OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_CAPNPROTO OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.capnproto.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_capnproto.cpp
     )
@@ -344,6 +395,7 @@ if (REFLECTCPP_CAPNPROTO OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_CBOR OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.cbor.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_cbor.cpp
     )
@@ -354,6 +406,7 @@ if (REFLECTCPP_CBOR OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_CEREAL OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.cereal.cppm)
     list(APPEND REFLECT_CPP_SOURCES
 	src/reflectcpp_cereal.cpp
     )
@@ -364,6 +417,7 @@ if (REFLECTCPP_CEREAL OR REFLECTCPP_CHECK_HEADERS)
 endif()
 
 if (REFLECTCPP_CSV OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.csv.cppm)
     if (NOT TARGET Arrow)
         find_package(Arrow CONFIG REQUIRED)
     endif()
@@ -375,6 +429,7 @@ if (REFLECTCPP_CSV OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_FLEXBUFFERS OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.flexbuf.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_flexbuf.cpp
     )
@@ -385,6 +440,7 @@ if (REFLECTCPP_FLEXBUFFERS OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_MSGPACK OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.msgpack.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_msgpack.cpp
     )
@@ -395,6 +451,7 @@ if (REFLECTCPP_MSGPACK OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_PARQUET OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.parquet.cppm)
     if (NOT TARGET Arrow)
         find_package(Arrow CONFIG REQUIRED)
     endif()
@@ -410,6 +467,7 @@ if (REFLECTCPP_PARQUET OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_TOML OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.toml.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_toml.cpp
     )
@@ -420,6 +478,7 @@ if (REFLECTCPP_TOML OR REFLECTCPP_CHECK_HEADERS)
 endif()
 
 if (REFLECTCPP_UBJSON OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.ubjson.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_ubjson.cpp
     )
@@ -430,6 +489,7 @@ if (REFLECTCPP_UBJSON OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_XML OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.xml.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_xml.cpp
     )
@@ -440,6 +500,7 @@ if (REFLECTCPP_XML OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_YAML OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.yaml.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_yaml.cpp
     )
@@ -450,6 +511,7 @@ if (REFLECTCPP_YAML OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_BOOST_SERIALIZATION OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.boost_serialization.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_boost_serialization.cpp
     )
@@ -460,6 +522,7 @@ if (REFLECTCPP_BOOST_SERIALIZATION OR REFLECTCPP_CHECK_HEADERS)
 endif ()
 
 if (REFLECTCPP_YAS OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.yas.cppm)
     list(APPEND REFLECT_CPP_SOURCES
         src/reflectcpp_yas.cpp
     )
@@ -467,8 +530,27 @@ if (REFLECTCPP_YAS OR REFLECTCPP_CHECK_HEADERS)
     target_include_directories(reflectcpp PRIVATE ${YAS_INCLUDE_DIRS})
 endif ()
 
+if (REFLECTCPP_CLI OR REFLECTCPP_CHECK_HEADERS)
+    list(APPEND REFLECT_CPP_MODULES modules/rfl.cli.cppm)
+endif ()
+
 set_target_properties(reflectcpp PROPERTIES LINKER_LANGUAGE CXX)
 target_sources(reflectcpp PRIVATE ${REFLECT_CPP_SOURCES})
+if (REFLECTCPP_MODULES_ENABLED)
+    set_source_files_properties(
+        ${REFLECT_CPP_MODULES}
+        PROPERTIES
+            LANGUAGE CXX
+            SKIP_PRECOMPILE_HEADERS ON
+    )
+    target_sources(reflectcpp
+        PUBLIC
+        FILE_SET rfl_modules
+        TYPE CXX_MODULES
+        BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/modules
+        FILES ${REFLECT_CPP_MODULES}
+    )
+endif ()
 target_precompile_headers(reflectcpp PRIVATE [["rfl.hpp"]] <iostream> <string> <functional>)
 
 if (REFLECTCPP_BUILD_TESTS)
@@ -539,7 +621,7 @@ if (REFLECTCPP_INSTALL)
         DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/reflectcpp"
     )
 
-    file(GLOB_RECURSE RFL_HEADERS RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/include/*" )
+    file(GLOB_RECURSE RFL_HEADERS RELATIVE ${CMAKE_CURRENT_LIST_DIR} "${CMAKE_CURRENT_LIST_DIR}/include/*.h" "${CMAKE_CURRENT_LIST_DIR}/include/*.hpp")
 
     target_sources(reflectcpp
         PUBLIC
@@ -549,11 +631,20 @@ if (REFLECTCPP_INSTALL)
         FILES ${RFL_HEADERS}
     )
 
-    install(
-        TARGETS reflectcpp
-        EXPORT reflectcpp-exports
-        FILE_SET reflectcpp_headers DESTINATION ${INCLUDE_INSTALL_DIR}
-    )
+    if (REFLECTCPP_MODULES_ENABLED)
+        install(
+            TARGETS reflectcpp
+            EXPORT reflectcpp-exports
+            FILE_SET reflectcpp_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+            FILE_SET rfl_modules DESTINATION ${CMAKE_INSTALL_DATADIR}/reflectcpp/modules
+        )
+    else ()
+        install(
+            TARGETS reflectcpp
+            EXPORT reflectcpp-exports
+            FILE_SET reflectcpp_headers DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
+        )
+    endif ()
 
     install(
         EXPORT reflectcpp-exports
@@ -597,4 +688,3 @@ include(CPack)
 if (ament_cmake_FOUND)
     ament_package()
 endif()
-
