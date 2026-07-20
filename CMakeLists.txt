@@ -149,8 +149,7 @@ if (REFLECTCPP_USE_VCPKG)
     if (REFLECTCPP_FLEXBUFFERS OR REFLECTCPP_CHECK_HEADERS)
         list(APPEND VCPKG_MANIFEST_FEATURES "flexbuffers")
     endif()
-
-    if (_REFLECTCPP_NEEDS_JSON_IMPL AND NOT REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
+    if ((_REFLECTCPP_NEEDS_JSON_IMPL OR REFLECTCPP_BUILD_TESTS) AND NOT REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
         list(APPEND VCPKG_MANIFEST_FEATURES "json")
     endif()
 
@@ -554,8 +553,52 @@ endif ()
 target_precompile_headers(reflectcpp PRIVATE [["rfl.hpp"]] <iostream> <string> <functional>)
 
 if (REFLECTCPP_BUILD_TESTS)
+    find_package(GTest CONFIG REQUIRED)
+
+    set(REFLECTCPP_TESTS_LIBRARY reflectcpp)
+    if (NOT REFLECTCPP_JSON AND
+        (REFLECTCPP_MODULES_ENABLED OR NOT _REFLECTCPP_NEEDS_JSON_IMPL))
+        # Shared helpers in non-JSON test suites require JSON support, so expose
+        # it through a test-only target without enabling it for library users.
+        add_library(reflectcpp_tests_json STATIC)
+        target_link_libraries(reflectcpp_tests_json PUBLIC reflectcpp)
+        if (REFLECTCPP_MODULES_ENABLED)
+            target_sources(reflectcpp_tests_json
+                PUBLIC
+                FILE_SET rfl_test_json_module
+                TYPE CXX_MODULES
+                BASE_DIRS ${CMAKE_CURRENT_SOURCE_DIR}/modules
+                FILES modules/rfl.json.cppm
+            )
+            set_source_files_properties(
+                modules/rfl.json.cppm
+                PROPERTIES
+                    LANGUAGE CXX
+                    SKIP_PRECOMPILE_HEADERS ON
+            )
+        endif ()
+
+        if (NOT _REFLECTCPP_NEEDS_JSON_IMPL)
+            target_sources(reflectcpp_tests_json PRIVATE src/reflectcpp_json.cpp)
+            if (REFLECTCPP_BUILD_SHARED)
+                target_compile_definitions(reflectcpp_tests_json PRIVATE reflectcpp_EXPORTS)
+            endif ()
+            if (REFLECTCPP_USE_BUNDLED_DEPENDENCIES)
+                target_sources(reflectcpp_tests_json PRIVATE src/yyjson.c)
+                set_source_files_properties(src/yyjson.c PROPERTIES LANGUAGE CXX)
+            else ()
+                if (NOT TARGET yyjson::yyjson)
+                    find_package(yyjson CONFIG REQUIRED)
+                endif ()
+                target_link_libraries(reflectcpp_tests_json PRIVATE yyjson::yyjson)
+            endif ()
+        endif ()
+
+        set(REFLECTCPP_TESTS_LIBRARY reflectcpp_tests_json)
+    endif ()
+
     add_library(reflectcpp_tests_crt INTERFACE)
-    target_link_libraries(reflectcpp_tests_crt INTERFACE reflectcpp GTest::gtest_main)
+    target_link_libraries(reflectcpp_tests_crt INTERFACE ${REFLECTCPP_TESTS_LIBRARY} GTest::gtest_main)
     target_compile_definitions(reflectcpp_tests_crt INTERFACE
         REFLECTCPP_MODULES=$<BOOL:${REFLECTCPP_MODULES_ENABLED}>
     )
@@ -564,7 +607,6 @@ if (REFLECTCPP_BUILD_TESTS)
     )
 
     enable_testing()
-    find_package(GTest CONFIG REQUIRED)
     add_subdirectory(tests)
 endif ()
 
