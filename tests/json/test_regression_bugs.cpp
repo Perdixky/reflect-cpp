@@ -1,5 +1,8 @@
 #include <gtest/gtest.h>
-#include <yyjson.h>
+
+#define RFL_YYJSON_USE_EXTERNAL_INLINE
+#include <rfl/json/yyjson.hpp>
+#undef RFL_YYJSON_USE_EXTERNAL_INLINE
 
 #include <cstdlib>
 #include <string>

@@ -61,6 +61,11 @@ auto unflatten_ptr_tuple(PtrTupleType& _t, Args... _args) {
   }
 }
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wmissing-braces"
+#endif
+
 template <class T, class Pointers, class... Args>
 auto move_from_pointers(Pointers& _ptrs, Args&&... _args) {
   constexpr auto i = sizeof...(Args);
@@ -84,6 +89,10 @@ auto move_from_pointers(Pointers& _ptrs, Args&&... _args) {
     }
   }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 template <class T>
 auto flatten_array(T* _v) {

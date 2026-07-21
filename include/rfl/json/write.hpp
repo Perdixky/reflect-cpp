@@ -2,11 +2,7 @@
 #define RFL_JSON_WRITE_HPP_
 
 #include <stdexcept>
-#if __has_include(<yyjson.h>)
-#include <yyjson.h>
-#else
-#include "../thirdparty/yyjson.h"
-#endif
+#include "yyjson.hpp"
 
 #include <ostream>
 #include <stdexcept>

@@ -34,8 +34,10 @@
 #include "rfl/Object.hpp"
 #include "rfl/Oct.hpp"
 #include "rfl/OneOf.hpp"
+#if !defined(REFLECTCPP_MODULES) || !REFLECTCPP_MODULES
 #include "rfl/Pattern.hpp"
 #include "rfl/PatternValidator.hpp"
+#endif
 #include "rfl/Positional.hpp"
 #include "rfl/Processors.hpp"
 #include "rfl/Ref.hpp"
@@ -78,7 +80,9 @@
 #include "rfl/name_t.hpp"
 #include "rfl/named_tuple_t.hpp"
 #include "rfl/parsing/CustomParser.hpp"
+#if !defined(REFLECTCPP_MODULES) || !REFLECTCPP_MODULES
 #include "rfl/patterns.hpp"
+#endif
 #include "rfl/remove_fields.hpp"
 #include "rfl/replace.hpp"
 #include "rfl/to_generic.hpp"

@@ -1,0 +1,37 @@
+module;
+
+#include <array>
+#include <charconv>
+#include <concepts>
+#include <cstddef>
+#include <cstdint>
+#include <iosfwd>
+#include <iterator>
+#include <limits>
+#include <memory>
+#include <optional>
+#include <string>
+#include <string_view>
+#include <tuple>
+#include <type_traits>
+#include <utility>
+
+export module ctre;
+
+using std::int16_t;
+using std::int32_t;
+using std::int64_t;
+using std::int8_t;
+using std::size_t;
+using std::uint16_t;
+using std::uint32_t;
+using std::uint64_t;
+using std::uint8_t;
+
+export {
+#if __has_include(<ctre.hpp>)
+#include "ctre.hpp"
+#else
+#include "rfl/thirdparty/ctre.hpp"
+#endif
+}

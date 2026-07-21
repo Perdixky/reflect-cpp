@@ -1,13 +1,17 @@
 #ifndef RFL_PATTERNVALIDATOR_HPP_
 #define RFL_PATTERNVALIDATOR_HPP_
 
-#include <sstream>
+#include <array>
 #include <string>
+#include <string_view>
+#include <utility>
 
+#if !defined(REFLECTCPP_MODULES) || !REFLECTCPP_MODULES
 #if __has_include(<ctre.hpp>)
 #include <ctre.hpp>
 #else
 #include "thirdparty/ctre.hpp"
+#endif
 #endif
 
 #include "Literal.hpp"
@@ -30,14 +34,25 @@ struct PatternValidator {
   /// @param _str The string to validate
   /// @return Result containing the string if it matches, or an error if it doesn't
   static Result<std::string> validate(const std::string& _str) noexcept {
-    if (ctre::match<ctll::fixed_string<_regex.length>{
-            ctll::construct_from_pointer, _regex.arr_.data()}>(_str)) {
+    constexpr auto regex = [] {
+      std::array<char, _regex.length> chars{};
+      for (std::size_t i = 0; i < _regex.length; ++i) {
+        chars[i] = _regex.arr_[i];
+      }
+      return ctll::fixed_string<_regex.length>{chars};
+    }();
+
+    if (ctre::match<regex>(std::string_view{_str})) {
       return _str;
     } else {
-      std::stringstream stream;
-      stream << "String '" << _str << "' did not match format '" << _name.str()
-             << "': '" << _regex.str() << "'.";
-      return error(stream.str());
+      std::string message = "String '";
+      message.append(_str);
+      message.append("' did not match format '");
+      message.append(_name.str());
+      message.append("': '");
+      message.append(_regex.str());
+      message.append("'.");
+      return error(std::move(message));
     }
   }
 

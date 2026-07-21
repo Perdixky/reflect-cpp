@@ -1,6 +1,8 @@
 module;
 
+#define RFL_YYJSON_USE_EXTERNAL_INLINE
 #include "rfl/json.hpp"
+#undef RFL_YYJSON_USE_EXTERNAL_INLINE
 
 export module rfl.json;
 

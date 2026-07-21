@@ -1,11 +1,7 @@
 #ifndef RFL_JSON_READ_HPP_
 #define RFL_JSON_READ_HPP_
 
-#if __has_include(<yyjson.h>)
-#include <yyjson.h>
-#else
-#include "../thirdparty/yyjson.h"
-#endif
+#include "yyjson.hpp"
 
 #include <istream>
 #include <string_view>
@@ -20,6 +16,9 @@ namespace json {
 
 using InputObjectType = typename Reader::InputObjectType;
 using InputVarType = typename Reader::InputVarType;
+
+inline constexpr yyjson_read_flag read_insitu_flag =
+    ::YYJSON_READ_INSITU;
 
 /// Parses an object from a JSON var.
 /// A JSON var is the internal representation used by the yyjson library.
@@ -41,9 +40,9 @@ auto read(const InputVarType& _obj) {
 /// @param _flag Optional yyjson flags for parsing (default: 0). Note: YYJSON_READ_INSITU is not supported.
 /// @return Result containing either the parsed object (or array of objects) or an error message
 template <class T, class... Ps>
-Result<internal::wrap_in_rfl_array_t<T>> read(
+Result<rfl::internal::wrap_in_rfl_array_t<T>> read(
     const std::string_view _json_str, const yyjson_read_flag _flag = 0) {
-  if (_flag & YYJSON_READ_INSITU) {
+  if (_flag & read_insitu_flag) {
     return error("YYJSON_READ_INSITU is not supported");
   }
   yyjson_read_err err;

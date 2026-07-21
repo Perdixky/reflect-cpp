@@ -1,10 +1,20 @@
 module;
 
+#include <string>
+#include <string_view>
 #include "rfl.hpp"
 #include "rfl/Deprecated.hpp"
 #include "rfl/num_fields.hpp"
 
 export module rfl;
+
+import ctre;
+
+export {
+#include "rfl/PatternValidator.hpp"
+#include "rfl/Pattern.hpp"
+#include "rfl/patterns.hpp"
+}
 
 export namespace rfl {
 using ::rfl::AddNamespacedTagsToVariants;
@@ -12,7 +22,6 @@ using ::rfl::AddStructName;
 using ::rfl::AddTagsToVariants;
 using ::rfl::AllOf;
 using ::rfl::AllowRawPtrs;
-using ::rfl::AlphaNumeric;
 using ::rfl::AnyOf;
 using ::rfl::Attribute;
 using ::rfl::Binary;
@@ -25,7 +34,6 @@ using ::rfl::DefaultIfMissing;
 using ::rfl::DefaultVal;
 using ::rfl::Deprecated;
 using ::rfl::Description;
-using ::rfl::Email;
 using ::rfl::EqualTo;
 using ::rfl::Error;
 using ::rfl::ExtraFields;
@@ -43,7 +51,6 @@ using ::rfl::NoOptionals;
 using ::rfl::Object;
 using ::rfl::Oct;
 using ::rfl::OneOf;
-using ::rfl::PatternValidator;
 using ::rfl::Positional;
 using ::rfl::Processors;
 using ::rfl::Ref;
@@ -59,7 +66,6 @@ using ::rfl::TaggedUnion;
 using ::rfl::Timestamp;
 using ::rfl::Tuple;
 using ::rfl::UnderlyingEnums;
-using ::rfl::UUIDv4;
 using ::rfl::Validator;
 using ::rfl::Variant;
 using ::rfl::Vectorstring;
@@ -129,4 +135,5 @@ using ::rfl::parsing::Parser;
 
 export namespace ctre {
 using ::ctre::find_captures;
+using ::ctll::fixed_string;
 }

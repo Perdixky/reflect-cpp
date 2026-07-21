@@ -1,11 +1,7 @@
 #ifndef RFL_JSON_TOSCHEMA_HPP_
 #define RFL_JSON_TOSCHEMA_HPP_
 
-#if __has_include(<yyjson.h>)
-#include <yyjson.h>
-#else
-#include "../thirdparty/yyjson.h"
-#endif
+#include "yyjson.hpp"
 
 #include <string>
 

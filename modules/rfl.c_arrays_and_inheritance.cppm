@@ -1,9 +1,11 @@
 module;
 
 #define REFLECT_CPP_C_ARRAYS_OR_INHERITANCE
+#define RFL_YYJSON_USE_EXTERNAL_INLINE
 #include "rfl.hpp"
 #include "rfl/json.hpp"
 #include "rfl/num_fields.hpp"
+#undef RFL_YYJSON_USE_EXTERNAL_INLINE
 
 export module rfl.c_arrays_and_inheritance;
 

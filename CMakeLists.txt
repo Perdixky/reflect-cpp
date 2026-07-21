@@ -276,6 +276,7 @@ if(REFLECTCPP_USE_STD_EXPECTED)
 endif()
 
 target_compile_definitions(reflectcpp PRIVATE
+    REFLECTCPP_MODULES=$<BOOL:${REFLECTCPP_MODULES_ENABLED}>
     RFL_ENUM_RANGE_MIN=${REFLECTCPP_ENUM_RANGE_MIN}
     RFL_ENUM_RANGE_MAX=${REFLECTCPP_ENUM_RANGE_MAX}
 )
@@ -285,6 +286,7 @@ set(REFLECT_CPP_SOURCES
 )
 
 set(REFLECT_CPP_MODULES
+    modules/ctre.cppm
     modules/rfl.cppm
 )
 
