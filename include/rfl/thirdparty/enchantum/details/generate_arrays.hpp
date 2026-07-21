@@ -1,6 +1,7 @@
 #pragma once
 #include "../common.hpp"
 #include <array>
+#include <bit>
 #include <climits>
 #include <cstddef>
 #include <type_traits>
@@ -55,8 +56,11 @@ constexpr auto generate_arrays()
     static_assert(Min < Max, "enum_traits::min must be less than enum_traits::max");
     std::array<Enum, (Max - Min) + 1> array;
     auto* const                       array_data = array.data();
-    for (std::size_t i = 0, size = array.size(); i < size; ++i)
-      array_data[i] = static_cast<Enum>(static_cast<decltype(Min)>(i) + Min);
+    for (std::size_t i = 0, size = array.size(); i < size; ++i) {
+      const auto value = static_cast<std::underlying_type_t<Enum>>(
+        static_cast<decltype(Min)>(i) + Min);
+      array_data[i] = std::bit_cast<Enum>(value);
+    }
     return array;
   }
 }
