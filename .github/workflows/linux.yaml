@@ -12,7 +12,7 @@ jobs:
       matrix:
         format: ["JSON", "AVRO", "BOOST_SERIALIZATION", "CAPNPROTO", "CBOR", "CEREAL", "FLEXBUFFERS", "MSGPACK", "PARQUET", "TOML", "UBJSON", "XML", "YAML", "benchmarks", "headers"]
         compiler: [llvm, gcc]
-        compiler-version: [11, 12, 13, 14, 16, 17, 18]
+        compiler-version: [11, 12, 13, 14, 15, 16, 17, 18, 20, 21]
         cxx: [20, 23]
         exclude:
           - compiler: gcc 
@@ -21,6 +21,10 @@ jobs:
             compiler-version: 17
           - compiler: gcc 
             compiler-version: 18
+          - compiler: gcc
+            compiler-version: 20
+          - compiler: gcc
+            compiler-version: 21
           - compiler: llvm
             compiler-version: 11
           - compiler: llvm 
@@ -29,6 +33,8 @@ jobs:
             compiler-version: 13
           - compiler: llvm 
             compiler-version: 14
+          - compiler: llvm
+            compiler-version: 15
           - compiler: gcc
             compiler-version: 11
             cxx: 23 
@@ -62,9 +68,19 @@ jobs:
         uses: lukka/run-vcpkg@v11
       - name: Install dependencies
         run: |
+          if [[ "${{ matrix.compiler }}" == "gcc" && "${{ matrix.compiler-version }}" == 15 ]]; then
+            sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+          elif [[ "${{ matrix.compiler }}" == "llvm" && "${{ matrix.compiler-version }}" -ge 20 ]]; then
+            wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc > /dev/null
+            echo "deb https://apt.llvm.org/noble/ llvm-toolchain-noble-${{ matrix.compiler-version }} main" | sudo tee /etc/apt/sources.list.d/llvm-${{ matrix.compiler-version }}.list
+          fi
           sudo apt update
-          if [[ "${{ matrix.compiler-version }}" == 11 ]]; then
-            sudo apt install -y ninja-build g++-11 
+          if [[ "${{ matrix.compiler }}" == "gcc" && "${{ matrix.compiler-version }}" == 11 ]]; then
+            sudo apt install -y ninja-build g++-11
+          elif [[ "${{ matrix.compiler }}" == "gcc" && "${{ matrix.compiler-version }}" == 15 ]]; then
+            sudo apt install -y ninja-build gcc-15 g++-15
+          elif [[ "${{ matrix.compiler }}" == "llvm" && "${{ matrix.compiler-version }}" -ge 20 ]]; then
+            sudo apt install -y ninja-build clang-${{ matrix.compiler-version }}
           else
             sudo apt install -y ninja-build
           fi
@@ -79,13 +95,13 @@ jobs:
           fi
           $CXX --version
           if [[ "${{ matrix.format }}" == "JSON" ]]; then
-            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DCMAKE_CXX_STANDARD=20 -DREFLECTCPP_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DREFLECTCPP_BUILD_TESTS=ON -DCMAKE_BUILD_TYPE=Release
           elif [[ "${{ matrix.format }}" == "benchmarks" ]]; then
-            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DCMAKE_CXX_STANDARD=20 -DREFLECTCPP_BUILD_BENCHMARKS=ON -DREFLECTCPP_ALL_FORMATS=ON -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DREFLECTCPP_BUILD_BENCHMARKS=ON -DREFLECTCPP_ALL_FORMATS=ON -DCMAKE_BUILD_TYPE=Release
           elif [[ "${{ matrix.format }}" == "headers" ]]; then
-            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DCMAKE_CXX_STANDARD=20 -DREFLECTCPP_CHECK_HEADERS=ON -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DREFLECTCPP_CHECK_HEADERS=ON -DCMAKE_BUILD_TYPE=Release
           else
-            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DCMAKE_CXX_STANDARD=20 -DREFLECTCPP_BUILD_TESTS=ON -DREFLECTCPP_JSON=OFF -DREFLECTCPP_${{ matrix.format }}=ON -DCMAKE_BUILD_TYPE=Release
+            cmake -S . -B build -G Ninja -DCMAKE_CXX_STANDARD=${{ matrix.cxx }} -DREFLECTCPP_BUILD_TESTS=ON -DREFLECTCPP_JSON=OFF -DREFLECTCPP_${{ matrix.format }}=ON -DCMAKE_BUILD_TYPE=Release
           fi
           cmake --build build -j4
       - name: Run tests
